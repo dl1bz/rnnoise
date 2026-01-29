@@ -474,7 +474,6 @@ float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
   if (!silence) {
 #if !TRAINING
     compute_rnn(&st->model, &st->rnn, g, &vad_prob, features, st->arch);
-#endif
     rnn_pitch_filter(st->delayed_X, st->delayed_P, st->delayed_Ex, st->delayed_Ep, st->delayed_Exp, g);
     for (i=0;i<NB_BANDS;i++) {
       float alpha = .6f;
@@ -486,7 +485,6 @@ float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
       st->lastg[i] = MIN16(1.f, g[i]*(st->delayed_Ex[i]+1e-3)/(Ex[i]+1e-3));
     }
     interp_band_gain(gf, g);
-#if 1
     for (i=0;i<FREQ_SIZE;i++) {
       st->delayed_X[i].r *= gf[i];
       st->delayed_X[i].i *= gf[i];

@@ -455,15 +455,12 @@ void rnn_pitch_filter(kiss_fft_cpx *X, const kiss_fft_cpx *P, const float *Ex, c
 }
 
 float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
-  int i;
   kiss_fft_cpx X[FREQ_SIZE];
   kiss_fft_cpx P[FREQ_SIZE];
   float x[FRAME_SIZE];
   float Ex[NB_BANDS], Ep[NB_BANDS];
   float Exp[NB_BANDS];
   float features[NB_FEATURES];
-  float g[NB_BANDS] = {0.0f};
-  float gf[FREQ_SIZE]={1};
   float vad_prob = 0;
   int silence;
   static const float a_hp[2] = {-1.99599, 0.99600};
@@ -473,6 +470,10 @@ float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
 
   if (!silence) {
 #if !TRAINING
+    int i;
+    float g[NB_BANDS] = {0.0f};
+    float gf[FREQ_SIZE]={1};
+
     compute_rnn(&st->model, &st->rnn, g, &vad_prob, features, st->arch);
     rnn_pitch_filter(st->delayed_X, st->delayed_P, st->delayed_Ex, st->delayed_Ep, st->delayed_Exp, g);
     for (i=0;i<NB_BANDS;i++) {

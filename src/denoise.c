@@ -462,7 +462,7 @@ float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
   float Ex[NB_BANDS], Ep[NB_BANDS];
   float Exp[NB_BANDS];
   float features[NB_FEATURES];
-  float g[NB_BANDS];
+  float g[NB_BANDS] = {0.0f};
   float gf[FREQ_SIZE]={1};
   float vad_prob = 0;
   int silence;
